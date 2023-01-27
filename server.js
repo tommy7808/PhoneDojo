@@ -6,7 +6,6 @@ import methodOverride from "method-override";
 import engine from 'ejs-mate';
 // Middleware that logs http requests
 import morgan from "morgan";
-// Schema validation, not necessary for this project
 import dotenv from 'dotenv';
 
 // Load environment variables
@@ -32,7 +31,6 @@ const connectToDb = async () => {
 
 connectToDb();
 
-const PORT = 8080;
 const app = express();
 
 // Server configurations

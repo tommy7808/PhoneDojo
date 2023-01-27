@@ -11,6 +11,8 @@ cp .env.example .env
 npm start
 ```
 
+Then visit: http://localhost:8080/
+
 **Note:** Don't forget to add your environment variables in the ``.env`` file. Populate ``DATABASE_URL`` with a mongo database url.
 
 

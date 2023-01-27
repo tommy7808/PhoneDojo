@@ -1,0 +1,63 @@
+<% layout('base') %> 
+<h1><%= phone.name %></h1>
+
+<img src="https://assets.swappie.com/cdn-cgi/image/width=600,height=600,fit=contain,format=auto/swappie-iphone-xr-red.png?v=13" alt="phone">
+
+<table class="table table-hover table-bordered">
+    <tbody>
+      <tr>
+        <th scope="row">Memory</th>
+        <td><%= phone.memory %> GB</td>
+      </tr>
+      <tr>
+        <th scope="row">Storage</th>
+        <td><%= phone.storage %> GB</td>
+      </tr>
+      <tr>
+        <th scope="row">Processor</th>
+        <td><%= phone.processor %></td>
+      </tr>
+      <tr>
+        <th scope="row">Display size</th>
+        <td><%= phone.displaySize %> inches</td>
+      </tr>
+      <tr>
+        <th scope="row">Weight</th>
+        <td><%= phone.weight %>g</td>
+      </tr>
+      <tr>
+        <th scope="row">Colour</th>
+        <td><%= phone.colour %></td>
+      </tr>
+      <tr>
+        <th scope="row">Available</th>
+        <td><%= phone.available %></td>
+      </tr>
+    </tbody>
+</table>
+
+<div>
+    <a href="/phones/<%= phone._id %>/edit" class="btn btn-primary d-block">Edit</a>
+    <br>
+    <form action="/phones/<%= phone._id %>?_method=DELETE" method="post">
+        <button class="btn btn-danger">Delete</button>
+    </form>
+</div>
+
+
+<div class="mt-5">
+  <h2 class="text-center">Leave a Review</h2>
+  <form action="" class="p-3">
+    <div class="mb-3">
+      <label for="rating" class="form-label">Rating</label>
+      <input class="form-range" type="range" name="rating" id="rating" min="0" max="5">
+    </div>
+    
+    <div>
+      <label class="form-label" for="body">Review</label>
+      <textarea class="form-control" name="body" id="body" cols="100" rows="5"></textarea>
+    </div>
+
+    <button class="btn btn-success mt-3">Submit</button>
+  </form>
+</div>

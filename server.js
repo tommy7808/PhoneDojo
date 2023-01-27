@@ -55,7 +55,7 @@ const formatCheckBox = (req, res, next) => {
 // Error handlers always have these 4 parameters
 const errorLogger = (err, req, res, next) => {
     console.log(err.stack);
-    if (err.name === 'ValidationError') err = new AppError(400, 'Validation Error: Phone details invalid');
+    if (err.name === 'ValidationError') err = new AppError(400, err.message);
     if (err.name === 'CastError') err = new AppError(400, 'Cast Error: Phone ID must be exactly 24 characters long');
     next(err);
 };
@@ -100,7 +100,7 @@ app.get('/phones/new', (req, res) => res.render('phones/new-phone', { title: 'Ne
 app.get('/phones/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
-        const phone = await Phone.findById(id);
+        const phone = await Phone.findById(id).populate('reviews');
         // Handle error when phone is not found
         if (!phone) {
             throw new AppError(404, 'Phone not found');

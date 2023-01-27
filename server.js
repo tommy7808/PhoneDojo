@@ -7,7 +7,10 @@ import engine from 'ejs-mate';
 // Middleware that logs http requests
 import morgan from "morgan";
 // Schema validation, not necessary for this project
-import Joi from "joi";
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config()
 
 import Phone from "./models/phone.js"
 import AppError from "./utils/AppError.js";
@@ -19,7 +22,7 @@ const __dirname = path.dirname(__filename);
 // Connect to database
 const connectToDb = async () => {
     try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/phone-store');
+        await mongoose.connect(`${process.env.DATABASE_URL}/phone-store`);
         console.log('Connected to database')
     } catch (error) {
         console.log('Failed to connect to database');
@@ -156,4 +159,4 @@ app.all('*', (req, res, next) => {
 app.use(errorLogger);
 app.use(errorHandler);
 
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+app.listen(process.env.PORT || 8080, () => console.log(`Server running on http://localhost:${process.env.PORT || 8080}`));

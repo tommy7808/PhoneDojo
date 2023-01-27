@@ -13,3 +13,7 @@ npm start
 
 **Note:** Don't forget to add your environment variables in the ``.env`` file. Populate ``DATABASE_URL`` with a mongo database url.
 
+
+<p align="center">
+  <kbd><img src="https://user-images.githubusercontent.com/72699320/215161822-da9b62f5-9190-4928-b2e8-2e6b6a0b69a3.png"></kbd>
+</p>

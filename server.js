@@ -12,6 +12,7 @@ import dotenv from 'dotenv';
 dotenv.config()
 
 import Phone from "./models/phone.js"
+import Review from './models/review.js';
 import AppError from "./utils/AppError.js";
 
 // These global variables are not available in modules (ES6)
@@ -148,6 +149,23 @@ app.get('/phones/:id/edit', async (req, res, next) => {
         next(err);
     }
 });
+
+app.post('/phones/:id/reviews', async (req, res, next) => {
+    try { 
+        const { id } = req.params;
+        const phone = await Phone.findById(id);
+        if (!phone) {
+            throw new AppError(404, 'Phone not found');
+        }
+        const review = new Review(req.body);
+        await review.save();
+        phone.reviews.push(review);
+        await phone.save();
+        res.redirect(`/phones/${id}`);
+    } catch (err) {
+        next(err);
+    }
+})
 
 // 404, matches any undefinded route without bias to HTTP method
 app.all('*', (req, res, next) => {

@@ -47,15 +47,15 @@
 
 <div class="mt-5">
   <h2 class="text-center">Leave a Review</h2>
-  <form action="" class="p-3">
+  <form action="/phones/<%= phone._id %>/reviews" class="p-3 needs-validation" method="post" novalidate>
     <div class="mb-3">
       <label for="rating" class="form-label">Rating</label>
-      <input class="form-range" type="range" name="rating" id="rating" min="0" max="5">
+      <input class="form-range" type="range" name="rating" id="rating" min="0" max="5" required>
     </div>
     
     <div>
       <label class="form-label" for="body">Review</label>
-      <textarea class="form-control" name="body" id="body" cols="100" rows="5"></textarea>
+      <textarea class="form-control" name="body" id="body" cols="100" rows="5" required></textarea>
     </div>
 
     <button class="btn btn-success mt-3">Submit</button>

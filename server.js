@@ -82,7 +82,7 @@ app.get('/phones', async (req, res, next) => {
 });
 
 // Create
-app.post('/phones', formatCheckBox, async (req, res, next) => { 
+app.post('/phones', formatCheckBox, async (req, res, next) => {
     console.log(req.body);
     try {
         const phone = new Phone(req.body);
@@ -151,7 +151,7 @@ app.get('/phones/:id/edit', async (req, res, next) => {
 });
 
 app.post('/phones/:id/reviews', async (req, res, next) => {
-    try { 
+    try {
         const { id } = req.params;
         const phone = await Phone.findById(id);
         if (!phone) {
@@ -165,7 +165,18 @@ app.post('/phones/:id/reviews', async (req, res, next) => {
     } catch (err) {
         next(err);
     }
-})
+});
+
+app.delete('/phones/:phoneId/reviews/:reviewID', async (req, res, next) => {
+    try {
+        const { phoneId, reviewID } = req.params;
+        await Phone.findByIdAndUpdate(phoneId, { $pull: { reviews: reviewID } });
+        await Review.findByIdAndDelete(reviewID);
+        res.redirect(`/phones/${phoneId}`);
+    } catch (err) {
+        next(err);
+    }
+});
 
 // 404, matches any undefinded route without bias to HTTP method
 app.all('*', (req, res, next) => {

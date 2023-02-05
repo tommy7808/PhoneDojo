@@ -44,11 +44,15 @@ router.get('/:id', async (req, res, next) => {
         const phone = await Phone.findById(id).populate('reviews');
         // Handle error when phone is not found
         if (!phone) {
-            throw new AppError(404, 'Phone not found');
+            req.flash('error', 'Cannot find phone!');
+            return res.redirect('/phones');
+            // throw new AppError(404, 'Phone not found');
         }
         res.render('phones/phone', { phone, title: phone.name });
     } catch (err) {
-        next(err);
+        req.flash('error', 'Cannot find phone!');
+        res.redirect('/phones');
+        // next(err);
     }
 });
 
@@ -84,11 +88,15 @@ router.get('/:id/edit', async (req, res, next) => {
         const { id } = req.params;
         const phone = await Phone.findById(id);
         if (!phone) {
-            throw new AppError(404, 'Phone not found');
+            req.flash('error', 'Cannot find phone!');
+            return res.redirect('/phones');
+            // throw new AppError(404, 'Phone not found');
         }
         res.render('phones/edit', { phone, memories, storages, title: 'Edit' });
     } catch (err) {
-        next(err);
+        req.flash('error', 'Cannot find phone!');
+        return res.redirect('/phones');
+        // next(err);
     }
 });
 

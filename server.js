@@ -21,6 +21,7 @@ const __dirname = path.dirname(__filename);
 // Connect to database
 const connectToDb = async () => {
     try {
+        mongoose.set('strictQuery', true);
         await mongoose.connect(`${process.env.DATABASE_URL}/phone-store`);
         console.log('Connected to database')
     } catch (error) {
@@ -37,6 +38,7 @@ const app = express();
 app.engine('ejs', engine);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'templates'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware
 app.use(methodOverride('_method'));

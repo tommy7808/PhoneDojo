@@ -1,6 +1,6 @@
 import express from 'express';
 import Phone from '../models/phone.js';
-import Review from '../models/review.js';
+import AppError from '../utils/AppError.js';
 
 // Middleware
 const formatCheckBox = (req, res, next) => {
@@ -84,34 +84,6 @@ router.get('/:id/edit', async (req, res, next) => {
             throw new AppError(404, 'Phone not found');
         }
         res.render('phones/edit', { phone, memories, storages, title: 'Edit' });
-    } catch (err) {
-        next(err);
-    }
-});
-
-router.post('/:id/reviews', async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        const phone = await Phone.findById(id);
-        if (!phone) {
-            throw new AppError(404, 'Phone not found');
-        }
-        const review = new Review(req.body);
-        await review.save();
-        phone.reviews.push(review);
-        await phone.save();
-        res.redirect(`/phones/${id}`);
-    } catch (err) {
-        next(err);
-    }
-});
-
-router.delete('/:phoneId/reviews/:reviewID', async (req, res, next) => {
-    try {
-        const { phoneId, reviewID } = req.params;
-        await Phone.findByIdAndUpdate(phoneId, { $pull: { reviews: reviewID } });
-        await Review.findByIdAndDelete(reviewID);
-        res.redirect(`/phones/${phoneId}`);
     } catch (err) {
         next(err);
     }

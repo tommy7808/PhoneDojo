@@ -8,6 +8,7 @@ import morgan from "morgan";
 import dotenv from 'dotenv';
 import AppError from "./utils/AppError.js";
 import phoneRoutes from './routes/phones.js';
+import reviewRoutes from './routes/reviews.js'
 import { errorLogger, errorHandler } from "./utils/errorHandler.js";
 
 // Load environment variables
@@ -49,6 +50,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/phones', phoneRoutes);
+app.use('/phones/:phoneId/reviews', reviewRoutes);
 
 // 404, matches any undefinded route without bias to HTTP method
 app.all('*', (req, res, next) => {

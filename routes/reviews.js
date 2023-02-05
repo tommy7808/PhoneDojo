@@ -16,6 +16,7 @@ router.post('/', async (req, res, next) => {
         await review.save();
         phone.reviews.push(review);
         await phone.save();
+        req.flash('success', 'Successfully posted a review');
         res.redirect(`/phones/${phoneId}`);
     } catch (err) {
         next(err);
@@ -27,6 +28,7 @@ router.delete('/:reviewID', async (req, res, next) => {
         const { phoneId, reviewID } = req.params;
         await Phone.findByIdAndUpdate(phoneId, { $pull: { reviews: reviewID } });
         await Review.findByIdAndDelete(reviewID);
+        req.flash('success', 'Successfully deleted a review');
         res.redirect(`/phones/${phoneId}`);
     } catch (err) {
         next(err);

@@ -1,3 +1,5 @@
+import AppError from './AppError.js';
+
 // Error handlers always have these 4 parameters
 export const errorLogger = (err, req, res, next) => {
     console.log(err.stack);

@@ -6,6 +6,8 @@ import methodOverride from "method-override";
 import engine from 'ejs-mate';
 import morgan from "morgan";
 import dotenv from 'dotenv';
+import session from "express-session";
+import flash from 'connect-flash';
 import AppError from "./utils/AppError.js";
 import phoneRoutes from './routes/phones.js';
 import reviewRoutes from './routes/reviews.js'
@@ -40,11 +42,28 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'templates'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+const sessionOptions = {
+    secret: 'testSecret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        // Cookie expires after one week
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+};
+app.use(session(sessionOptions));
+app.use(flash());
+
 // Middleware
 app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan('dev'));
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+});
 
 // Routes
 app.get('/', (req, res) => {

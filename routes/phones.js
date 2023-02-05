@@ -27,6 +27,7 @@ router.post('/', formatCheckBox, async (req, res, next) => {
     try {
         const phone = new Phone(req.body);
         await phone.save();
+        req.flash('success', 'Successfully added new phone!');
         res.redirect('/phones');
     } catch (err) {
         next(err);
@@ -56,6 +57,7 @@ router.put('/:id', formatCheckBox, async (req, res, next) => {
     try {
         const { id } = req.params;
         await Phone.findByIdAndUpdate(id, req.body, { runValidators: true });
+        req.flash('success', 'Successfully updated phone');
         res.redirect(`/phones/${id}`);
     } catch (err) {
         next(err);
@@ -67,6 +69,7 @@ router.delete('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
         await Phone.findByIdAndDelete(id);
+        req.flash('success', 'Successfully deleted phone');
         res.redirect('/phones');
     } catch (err) {
         next(err);

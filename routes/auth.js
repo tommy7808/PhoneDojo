@@ -1,4 +1,5 @@
 import express from 'express';
+import passport from 'passport';
 import User from '../models/user.js';
 
 const router = express.Router();
@@ -19,6 +20,22 @@ router.post('/register', async (req, res) => {
         req.flash('error', err.message);
         return res.redirect('/register');
     }
+});
+
+router.get('/login', (req, res) => {
+    res.render('auth/login', { title: 'Login' });
+});
+
+router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
+    req.flash('success', 'Welcome back');
+    res.redirect('/phones');
+});
+
+router.get('/logout', function (req, res, next) {
+    req.logout(function (err) {
+        if (err) { return next(err); }
+        res.redirect('/');
+    });
 });
 
 export default router;

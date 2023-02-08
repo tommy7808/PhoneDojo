@@ -12,3 +12,11 @@ export const errorHandler = (err, req, res, next) => {
     const { status = 500, message = 'Oops Something went wrong' } = err;
     res.status(status).render('error', { status, message, title: 'Error' });
 }
+
+export const isLoggedIn = (req, res, next) => {
+    if (!req.isAuthenticated()) {
+        req.flash('error', 'You must be signed in');
+        return res.redirect('/login');
+    }
+    next();
+}

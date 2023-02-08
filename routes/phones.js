@@ -1,6 +1,7 @@
 import express from 'express';
 import Phone from '../models/phone.js';
 import AppError from '../utils/AppError.js';
+import { isLoggedIn } from '../utils/middleware.js';
 
 // Middleware
 const formatCheckBox = (req, res, next) => {
@@ -23,7 +24,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // Create
-router.post('/', formatCheckBox, async (req, res, next) => {
+router.post('/', isLoggedIn, formatCheckBox, async (req, res, next) => {
     try {
         const phone = new Phone(req.body);
         await phone.save();
@@ -35,7 +36,9 @@ router.post('/', formatCheckBox, async (req, res, next) => {
 });
 
 // New phone form
-router.get('/new', (req, res) => res.render('phones/new-phone', { title: 'New Phone' }));
+router.get('/new', isLoggedIn, (req, res) => {
+    res.render('phones/new-phone', { title: 'New Phone' });
+});
 
 // Read phone
 router.get('/:id', async (req, res, next) => {
@@ -57,7 +60,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // Update
-router.put('/:id', formatCheckBox, async (req, res, next) => {
+router.put('/:id', isLoggedIn, formatCheckBox, async (req, res, next) => {
     try {
         const { id } = req.params;
         await Phone.findByIdAndUpdate(id, req.body, { runValidators: true });
@@ -69,7 +72,7 @@ router.put('/:id', formatCheckBox, async (req, res, next) => {
 });
 
 // Delete
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', isLoggedIn, async (req, res, next) => {
     try {
         const { id } = req.params;
         await Phone.findByIdAndDelete(id);
@@ -81,7 +84,7 @@ router.delete('/:id', async (req, res, next) => {
 });
 
 // Edit form
-router.get('/:id/edit', async (req, res, next) => {
+router.get('/:id/edit', isLoggedIn, async (req, res, next) => {
     try {
         const memories = Phone.schema.obj.memory.enum;
         const storages = Phone.schema.obj.storage.enum;

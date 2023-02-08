@@ -1,0 +1,25 @@
+<% layout('base') %>
+
+<h1>Login</h1>
+
+<form action="/login" method="post" class="needs-validation row g-2" novalidate>
+    <div class="row g-2">
+        <div class="col-8">
+            <label for="username" class="form-label">Username:</label>
+            <input type="text" name="username" id="username" required class="form-control">
+        </div>
+    </div>
+    
+    <div class="row g-2">
+        <div class="col-8">
+            <label for="password" class="form-label">Password:</label>
+            <input type="password" name="password" id="password" required class="form-control">
+        </div>
+    </div>
+
+    <div class="row g-2">
+        <div class="col-12">
+            <button class="btn btn-success">Login</button>
+        </div>
+    </div>
+</form>

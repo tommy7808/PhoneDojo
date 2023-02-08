@@ -15,7 +15,7 @@ import AppError from "./utils/AppError.js";
 import phoneRoutes from './routes/phones.js';
 import reviewRoutes from './routes/reviews.js'
 import authRoutes from './routes/auth.js';
-import { errorLogger, errorHandler } from "./utils/errorHandler.js";
+import { errorLogger, errorHandler } from "./utils/middleware.js";
 import User from "./models/user.js";
 
 // Load environment variables

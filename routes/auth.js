@@ -29,9 +29,11 @@ router.get('/login', (req, res) => {
     res.render('auth/login', { title: 'Login' });
 });
 
-router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
+router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login', keepSessionInfo: true }), (req, res) => {
+    const redirectUrl = req.session.returnTo || '/phones';
     req.flash('success', 'Welcome back');
-    res.redirect('/phones');
+    delete req.session.returnTo;
+    res.redirect(redirectUrl);
 });
 
 router.get('/logout', function (req, res, next) {

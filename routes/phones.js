@@ -27,6 +27,7 @@ router.get('/', async (req, res, next) => {
 router.post('/', isLoggedIn, formatCheckBox, async (req, res, next) => {
     try {
         const phone = new Phone(req.body);
+        phone.user = req.user._id;
         await phone.save();
         req.flash('success', 'Successfully added new phone!');
         res.redirect('/phones');
@@ -44,7 +45,8 @@ router.get('/new', isLoggedIn, (req, res) => {
 router.get('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
-        const phone = await Phone.findById(id).populate('reviews');
+        const phone = await Phone.findById(id).populate('reviews').populate('user');
+        console.log(phone);
         // Handle error when phone is not found
         if (!phone) {
             req.flash('error', 'Cannot find phone!');

@@ -10,9 +10,11 @@ import session from "express-session";
 import flash from 'connect-flash';
 import passport from "passport";
 import localStrategy from 'passport-local';
+
 import AppError from "./utils/AppError.js";
 import phoneRoutes from './routes/phones.js';
 import reviewRoutes from './routes/reviews.js'
+import authRoutes from './routes/auth.js';
 import { errorLogger, errorHandler } from "./utils/errorHandler.js";
 import User from "./models/user.js";
 
@@ -44,6 +46,17 @@ app.engine('ejs', engine);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'templates'));
 app.use(express.static(path.join(__dirname, 'public')));
+const sessionOptions = {
+    secret: 'testSecret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        // Cookie expires after one week
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+};
+app.use(session(sessionOptions));
+app.use(flash());
 
 
 // Middleware
@@ -56,17 +69,6 @@ app.use((req, res, next) => {
     res.locals.error = req.flash('error');
     next();
 });
-const sessionOptions = {
-    secret: 'testSecret',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        // Cookie expires after one week
-        maxAge: 1000 * 60 * 60 * 24 * 7
-    }
-};
-app.use(session(sessionOptions));
-app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new localStrategy(User.authenticate()));
@@ -78,6 +80,7 @@ app.get('/', (req, res) => {
     res.render('index.ejs', { title: 'Phone Dojo' });
 });
 
+app.use('/', authRoutes);
 app.use('/phones', phoneRoutes);
 app.use('/phones/:phoneId/reviews', reviewRoutes);
 

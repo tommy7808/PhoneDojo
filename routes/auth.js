@@ -12,9 +12,12 @@ router.post('/register', async (req, res) => {
     try {
         const { email, username, password } = req.body;
         const user = new User({ email, username });
-        await User.register(user, password);
-        req.flash('success', 'Successfully created new account!');
-        res.redirect('/phones');
+        const registeredUser = await User.register(user, password);
+        req.login(registeredUser, err => {
+            if (err) return next(err);
+            req.flash('success', 'Successfully created new account!');
+            res.redirect('/phones');
+        });
     } catch (err) {
         err.message = err.code === 11000 ? 'A user is already registered with this email' : err.message;
         req.flash('error', err.message);

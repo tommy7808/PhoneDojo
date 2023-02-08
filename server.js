@@ -8,10 +8,13 @@ import morgan from "morgan";
 import dotenv from 'dotenv';
 import session from "express-session";
 import flash from 'connect-flash';
+import passport from "passport";
+import localStrategy from 'passport-local';
 import AppError from "./utils/AppError.js";
 import phoneRoutes from './routes/phones.js';
 import reviewRoutes from './routes/reviews.js'
 import { errorLogger, errorHandler } from "./utils/errorHandler.js";
+import User from "./models/user.js";
 
 // Load environment variables
 dotenv.config()
@@ -42,17 +45,6 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'templates'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-const sessionOptions = {
-    secret: 'testSecret',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        // Cookie expires after one week
-        maxAge: 1000 * 60 * 60 * 24 * 7
-    }
-};
-app.use(session(sessionOptions));
-app.use(flash());
 
 // Middleware
 app.use(methodOverride('_method'));
@@ -64,6 +56,22 @@ app.use((req, res, next) => {
     res.locals.error = req.flash('error');
     next();
 });
+const sessionOptions = {
+    secret: 'testSecret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        // Cookie expires after one week
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+};
+app.use(session(sessionOptions));
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // Routes
 app.get('/', (req, res) => {

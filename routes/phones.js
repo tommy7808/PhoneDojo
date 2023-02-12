@@ -1,105 +1,15 @@
 import express from 'express';
-import Phone from '../models/phone.js';
-import AppError from '../utils/AppError.js';
+import { renderPhones, createPhone, renderNewPhoneForm, renderPhone, updatePhone, deletePhone, renderEditPhoneForm } from '../controllers/phones.js';
 import { isLoggedIn, formatCheckBox, isAuthorised } from '../utils/middleware.js';
 
 const router = express.Router();
 
-// Read all phones
-router.get('/', async (req, res, next) => {
-    try {
-        const phones = await Phone.find({});
-        res.render('phones/phones', { phones, title: 'Phones' });
-    } catch (err) {
-        // This will send it to the next error handler, express handler if none defined
-        next(err);
-    }
-});
-
-// Create
-router.post('/', isLoggedIn, formatCheckBox, async (req, res, next) => {
-    try {
-        const phone = new Phone(req.body);
-        phone.user = req.user._id;
-        await phone.save();
-        req.flash('success', 'Successfully added new phone!');
-        res.redirect('/phones');
-    } catch (err) {
-        next(err);
-    }
-});
-
-// New phone form
-router.get('/new', isLoggedIn, (req, res) => {
-    res.render('phones/new-phone', { title: 'New Phone' });
-});
-
-// Read phone
-router.get('/:id', async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        const phone = await Phone.findById(id).populate({
-            path: 'reviews',
-            populate: {
-                path: 'user'
-            }
-        }).populate('user');
-        // Handle error when phone is not found
-        if (!phone) {
-            req.flash('error', 'Cannot find phone!');
-            return res.redirect('/phones');
-            // throw new AppError(404, 'Phone not found');
-        }
-        res.render('phones/phone', { phone, title: phone.name });
-    } catch (err) {
-        req.flash('error', 'Cannot find phone!');
-        res.redirect('/phones');
-        // next(err);
-    }
-});
-
-// Update
-router.put('/:id', isLoggedIn, isAuthorised, formatCheckBox, async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        await Phone.findByIdAndUpdate(id, req.body, { runValidators: true });
-        req.flash('success', 'Successfully updated phone');
-        res.redirect(`/phones/${id}`);
-    } catch (err) {
-        next(err);
-    }
-});
-
-// Delete
-router.delete('/:id', isLoggedIn, isAuthorised, async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        await Phone.findByIdAndDelete(id);
-        req.flash('success', 'Successfully deleted phone');
-        res.redirect('/phones');
-    } catch (err) {
-        next(err);
-    }
-});
-
-// Edit form
-router.get('/:id/edit', isLoggedIn, isAuthorised, async (req, res, next) => {
-    try {
-        const memories = Phone.schema.obj.memory.enum;
-        const storages = Phone.schema.obj.storage.enum;
-        const { id } = req.params;
-        const phone = await Phone.findById(id);
-        if (!phone) {
-            req.flash('error', 'Cannot find phone!');
-            return res.redirect('/phones');
-            // throw new AppError(404, 'Phone not found');
-        }
-        res.render('phones/edit', { phone, memories, storages, title: 'Edit' });
-    } catch (err) {
-        req.flash('error', 'Cannot find phone!');
-        return res.redirect('/phones');
-        // next(err);
-    }
-});
+router.get('/', renderPhones);
+router.get('/new', isLoggedIn, renderNewPhoneForm);
+router.post('/', isLoggedIn, formatCheckBox, createPhone);
+router.get('/:id', renderPhone);
+router.get('/:id/edit', isLoggedIn, isAuthorised, renderEditPhoneForm);
+router.put('/:id', isLoggedIn, isAuthorised, formatCheckBox, updatePhone);
+router.delete('/:id', isLoggedIn, isAuthorised, deletePhone);
 
 export default router;

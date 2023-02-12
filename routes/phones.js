@@ -1,14 +1,7 @@
 import express from 'express';
 import Phone from '../models/phone.js';
 import AppError from '../utils/AppError.js';
-import { isLoggedIn } from '../utils/middleware.js';
-
-// Middleware
-const formatCheckBox = (req, res, next) => {
-    // HTML checkboxes return string values so must be converted to boolean to match schema
-    req.body.available = req.body.available ? true : false;
-    next();
-};
+import { isLoggedIn, formatCheckBox, isAuthorised } from '../utils/middleware.js';
 
 const router = express.Router();
 
@@ -46,7 +39,6 @@ router.get('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
         const phone = await Phone.findById(id).populate('reviews').populate('user');
-        console.log(phone);
         // Handle error when phone is not found
         if (!phone) {
             req.flash('error', 'Cannot find phone!');
@@ -62,7 +54,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // Update
-router.put('/:id', isLoggedIn, formatCheckBox, async (req, res, next) => {
+router.put('/:id', isLoggedIn, isAuthorised, formatCheckBox, async (req, res, next) => {
     try {
         const { id } = req.params;
         await Phone.findByIdAndUpdate(id, req.body, { runValidators: true });
@@ -74,7 +66,7 @@ router.put('/:id', isLoggedIn, formatCheckBox, async (req, res, next) => {
 });
 
 // Delete
-router.delete('/:id', isLoggedIn, async (req, res, next) => {
+router.delete('/:id', isLoggedIn, isAuthorised, async (req, res, next) => {
     try {
         const { id } = req.params;
         await Phone.findByIdAndDelete(id);
@@ -86,7 +78,7 @@ router.delete('/:id', isLoggedIn, async (req, res, next) => {
 });
 
 // Edit form
-router.get('/:id/edit', isLoggedIn, async (req, res, next) => {
+router.get('/:id/edit', isLoggedIn, isAuthorised, async (req, res, next) => {
     try {
         const memories = Phone.schema.obj.memory.enum;
         const storages = Phone.schema.obj.storage.enum;

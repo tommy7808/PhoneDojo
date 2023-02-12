@@ -1,4 +1,5 @@
 import AppError from './AppError.js';
+import Phone from '../models/phone.js';
 
 // Error handlers always have these 4 parameters
 export const errorLogger = (err, req, res, next) => {
@@ -21,3 +22,29 @@ export const isLoggedIn = (req, res, next) => {
     }
     next();
 }
+
+export const formatCheckBox = (req, res, next) => {
+    // HTML checkboxes return string values so must be converted to boolean to match schema
+    req.body.available = req.body.available ? true : false;
+    next();
+};
+
+export const isAuthorised = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const phone = await Phone.findById(id);
+        if (!phone) {
+            req.flash('error', 'Cannot find phone!');
+            return res.redirect('/phones');
+            // throw new AppError(404, 'Phone not found');
+        }
+        if (!phone.user.equals(req.user._id)) {
+            req.flash('error', 'You do not have permission to do that!')
+            return res.redirect(`/phones/${id}`);
+        }
+    } catch (err) {
+        return next(err);
+        // return next(new AppError(404, 'Phone not found'));
+    }   
+    next();
+};

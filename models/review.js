@@ -10,6 +10,10 @@ const reviewSchema = new Schema({
         min: [0, 'Minimum rating is 0'],
         max: [5, 'Maximum rating is 5'],
         required: true
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 });
 

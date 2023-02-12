@@ -1,5 +1,6 @@
 import AppError from './AppError.js';
 import Phone from '../models/phone.js';
+import Review from '../models/review.js';
 
 // Error handlers always have these 4 parameters
 export const errorLogger = (err, req, res, next) => {
@@ -41,6 +42,25 @@ export const isAuthorised = async (req, res, next) => {
         if (!phone.user.equals(req.user._id)) {
             req.flash('error', 'You do not have permission to do that!')
             return res.redirect(`/phones/${id}`);
+        }
+    } catch (err) {
+        return next(err);
+        // return next(new AppError(404, 'Phone not found'));
+    }   
+    next();
+};
+
+export const isAuthorisedReview = async (req, res, next) => {
+    try {
+        const { phoneId, reviewID } = req.params;
+        const review = await Review.findById(reviewID);
+        if (!review) {
+            req.flash('error', 'Cannot find review!');
+            return res.redirect(`/phones/${phoneId}`);
+        }
+        if (!review.user.equals(req.user._id)) {
+            req.flash('error', 'You do not have permission to do that!')
+            return res.redirect(`/phones/${phoneId}`);
         }
     } catch (err) {
         return next(err);

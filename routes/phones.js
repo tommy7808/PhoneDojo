@@ -38,7 +38,12 @@ router.get('/new', isLoggedIn, (req, res) => {
 router.get('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
-        const phone = await Phone.findById(id).populate('reviews').populate('user');
+        const phone = await Phone.findById(id).populate({
+            path: 'reviews',
+            populate: {
+                path: 'user'
+            }
+        }).populate('user');
         // Handle error when phone is not found
         if (!phone) {
             req.flash('error', 'Cannot find phone!');

@@ -1,13 +1,17 @@
-import express from 'express';
+import { Router } from 'express';
 import passport from 'passport';
 import { renderRegisterForm, registerUser, renderLoginForm, loginUser, logoutUser } from '../controllers/auth.js';
 
-const router = express.Router();
+const router = Router();
 
-router.get('/register', renderRegisterForm);
-router.post('/register', registerUser);
-router.get('/login', renderLoginForm);
-router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login', keepSessionInfo: true }), loginUser);
+router.route('/register')
+    .get(renderRegisterForm)
+    .post(registerUser);
+
+router.route('/login')
+    .get(renderLoginForm)
+    .post(passport.authenticate('local', { failureFlash: true, failureRedirect: '/login', keepSessionInfo: true }), loginUser);
+
 router.get('/logout', logoutUser);
 
 export default router;

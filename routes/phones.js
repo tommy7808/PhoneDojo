@@ -1,15 +1,20 @@
-import express from 'express';
+import { Router } from 'express';
 import { renderPhones, createPhone, renderNewPhoneForm, renderPhone, updatePhone, deletePhone, renderEditPhoneForm } from '../controllers/phones.js';
 import { isLoggedIn, formatCheckBox, isAuthorised } from '../utils/middleware.js';
 
-const router = express.Router();
+const router = Router();
 
-router.get('/', renderPhones);
+router.route('/')
+    .get(renderPhones)
+    .post(isLoggedIn, formatCheckBox, createPhone);
+
 router.get('/new', isLoggedIn, renderNewPhoneForm);
-router.post('/', isLoggedIn, formatCheckBox, createPhone);
-router.get('/:id', renderPhone);
+
+router.route('/:id')
+    .get(renderPhone)
+    .put(isLoggedIn, isAuthorised, formatCheckBox, updatePhone)
+    .delete(isLoggedIn, isAuthorised, deletePhone);
+    
 router.get('/:id/edit', isLoggedIn, isAuthorised, renderEditPhoneForm);
-router.put('/:id', isLoggedIn, isAuthorised, formatCheckBox, updatePhone);
-router.delete('/:id', isLoggedIn, isAuthorised, deletePhone);
 
 export default router;

@@ -5,11 +5,11 @@ import { fileURLToPath } from 'url';
 import methodOverride from "method-override";
 import engine from 'ejs-mate';
 import morgan from "morgan";
-import dotenv from 'dotenv';
 import session from "express-session";
 import flash from 'connect-flash';
 import passport from "passport";
 import localStrategy from 'passport-local';
+import dotenv from 'dotenv';
 
 import AppError from "./utils/AppError.js";
 import phoneRoutes from './routes/phones.js';
@@ -18,8 +18,10 @@ import authRoutes from './routes/auth.js';
 import { errorLogger, errorHandler } from "./utils/middleware.js";
 import User from "./models/user.js";
 
-// Load environment variables
-dotenv.config()
+if (process.env.NODE_ENV !== 'production') {
+    // Load environment variables
+    dotenv.config();
+}
 
 // These global variables are not available in modules (ES6)
 const __filename = fileURLToPath(import.meta.url);

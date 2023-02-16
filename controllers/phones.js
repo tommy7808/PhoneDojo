@@ -1,6 +1,6 @@
-import Phone from '../models/phone.js';
+const Phone = require('../models/phone');
 
-export const renderPhones = async (req, res, next) => {
+module.exports.renderPhones = async (req, res, next) => {
     try {
         const phones = await Phone.find({});
         res.render('phones/phones', { phones, title: 'Phones' });
@@ -10,7 +10,7 @@ export const renderPhones = async (req, res, next) => {
     }
 }
 
-export const createPhone = async (req, res, next) => {
+module.exports.createPhone = async (req, res, next) => {
     try {
         const phone = new Phone(req.body);
         phone.user = req.user._id;
@@ -22,11 +22,11 @@ export const createPhone = async (req, res, next) => {
     }
 }
 
-export const renderNewPhoneForm = (req, res) => {
+module.exports.renderNewPhoneForm = (req, res) => {
     res.render('phones/new-phone', { title: 'New Phone' });
 }
 
-export const renderPhone = async (req, res, next) => {
+module.exports.renderPhone = async (req, res, next) => {
     try {
         const { id } = req.params;
         const phone = await Phone.findById(id).populate({
@@ -49,7 +49,7 @@ export const renderPhone = async (req, res, next) => {
     }
 }
 
-export const updatePhone = async (req, res, next) => {
+module.exports.updatePhone = async (req, res, next) => {
     try {
         const { id } = req.params;
         await Phone.findByIdAndUpdate(id, req.body, { runValidators: true });
@@ -60,7 +60,7 @@ export const updatePhone = async (req, res, next) => {
     }
 }
 
-export const deletePhone = async (req, res, next) => {
+module.exports.deletePhone = async (req, res, next) => {
     try {
         const { id } = req.params;
         await Phone.findByIdAndDelete(id);
@@ -71,7 +71,7 @@ export const deletePhone = async (req, res, next) => {
     }
 }
 
-export const renderEditPhoneForm = async (req, res, next) => {
+module.exports.renderEditPhoneForm = async (req, res, next) => {
     try {
         const memories = Phone.schema.obj.memory.enum;
         const storages = Phone.schema.obj.storage.enum;

@@ -1,11 +1,11 @@
-import { Router } from 'express';
-import { storage } from '../cloudinary/index.js';
+const { Router } = require('express');
+const { storage } = require('../cloudinary/index');
 // Multer is middleware for parsing request bodys with files.
-import multer from "multer";
+const multer = require('multer');
 // Specify where uploaded files will be stored.
 const upload = multer({ storage });
-import { renderPhones, createPhone, renderNewPhoneForm, renderPhone, updatePhone, deletePhone, renderEditPhoneForm } from '../controllers/phones.js';
-import { isLoggedIn, formatCheckBox, isAuthorised } from '../utils/middleware.js';
+const { renderPhones, createPhone, renderNewPhoneForm, renderPhone, updatePhone, deletePhone, renderEditPhoneForm } = require('../controllers/phones');
+const { isLoggedIn, formatCheckBox, isAuthorised } = require('../utils/middleware');
 
 const router = Router();
 
@@ -26,4 +26,4 @@ router.route('/:id')
     
 router.get('/:id/edit', isLoggedIn, isAuthorised, renderEditPhoneForm);
 
-export default router;
+module.exports = router;

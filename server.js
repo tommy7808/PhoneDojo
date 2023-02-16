@@ -1,31 +1,26 @@
-import express from "express";
-import mongoose from "mongoose";
-import path from "path";
-import { fileURLToPath } from 'url';
-import methodOverride from "method-override";
-import engine from 'ejs-mate';
-import morgan from "morgan";
-import session from "express-session";
-import flash from 'connect-flash';
-import passport from "passport";
-import localStrategy from 'passport-local';
-import dotenv from 'dotenv';
+const express = require('express');
+const mongoose = require('mongoose');
+const path = require('path');
+const methodOverride = require('method-override');
+const engine = require('ejs-mate');
+const morgan = require('morgan');
+const session = require('express-session');
+const flash = require('connect-flash');
+const passport = require('passport');
+const localStrategy = require('passport-local');
+const dotenv = require('dotenv');
 
-import AppError from "./utils/AppError.js";
-import phoneRoutes from './routes/phones.js';
-import reviewRoutes from './routes/reviews.js'
-import authRoutes from './routes/auth.js';
-import { errorLogger, errorHandler } from "./utils/middleware.js";
-import User from "./models/user.js";
+const AppError = require('./utils/AppError');
+const phoneRoutes = require('./routes/phones');
+const reviewRoutes = require('./routes/reviews');
+const authRoutes = require('./routes/auth');
+const { errorLogger, errorHandler } = require('./utils/middleware');
+const User = require('./models/user');
 
 if (process.env.NODE_ENV !== 'production') {
     // Load environment variables
     dotenv.config();
 }
-
-// These global variables are not available in modules (ES6)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Connect to database
 const connectToDb = async () => {

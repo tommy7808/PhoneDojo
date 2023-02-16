@@ -1,6 +1,6 @@
-import { Router } from 'express';
-import passport from 'passport';
-import { renderRegisterForm, registerUser, renderLoginForm, loginUser, logoutUser } from '../controllers/auth.js';
+const { Router } = require('express');
+const passport = require('passport');
+const { renderRegisterForm, registerUser, renderLoginForm, loginUser, logoutUser } = require('../controllers/auth');
 
 const router = Router();
 
@@ -14,4 +14,4 @@ router.route('/login')
 
 router.get('/logout', logoutUser);
 
-export default router;
+module.exports = router;

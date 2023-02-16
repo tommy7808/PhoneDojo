@@ -1,5 +1,5 @@
-import { Schema, model } from "mongoose";
-import Review from './review.js';
+const { Schema, model } = require('mongoose');
+const Review = require('./review');
 
 const phoneSchema = new Schema({
     user: {
@@ -47,4 +47,4 @@ const phoneSchema = new Schema({
 
 phoneSchema.post('findOneAndDelete', async phone => phone.reviews && await Review.deleteMany({ _id: { $in: phone.reviews } }));
 
-export default model('Phone', phoneSchema);
+module.exports = model('Phone', phoneSchema);

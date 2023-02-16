@@ -1,21 +1,21 @@
-import AppError from './AppError.js';
-import Phone from '../models/phone.js';
-import Review from '../models/review.js';
+const AppError = require('./AppError');
+const Phone = require('../models/phone');
+const Review = require('../models/review');
 
 // Error handlers always have these 4 parameters
-export const errorLogger = (err, req, res, next) => {
+module.exports.errorLogger = (err, req, res, next) => {
     console.log(err.stack);
     if (err.name === 'ValidationError') err = new AppError(400, err.message);
     if (err.name === 'CastError') err = new AppError(400, 'Cast Error: Phone ID must be exactly 24 characters long');
     next(err);
 };
 
-export const errorHandler = (err, req, res, next) => {
+module.exports.errorHandler = (err, req, res, next) => {
     const { status = 500, message = 'Oops Something went wrong' } = err;
     res.status(status).render('error', { status, message, title: 'Error' });
 }
 
-export const isLoggedIn = (req, res, next) => {
+module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         req.session.returnTo = req.originalUrl;
         req.flash('error', 'You must be signed in');
@@ -24,13 +24,13 @@ export const isLoggedIn = (req, res, next) => {
     next();
 }
 
-export const formatCheckBox = (req, res, next) => {
+module.exports.formatCheckBox = (req, res, next) => {
     // HTML checkboxes return string values so must be converted to boolean to match schema
     req.body.available = req.body.available ? true : false;
     next();
 };
 
-export const isAuthorised = async (req, res, next) => {
+module.exports.isAuthorised = async (req, res, next) => {
     try {
         const { id } = req.params;
         const phone = await Phone.findById(id);
@@ -50,7 +50,7 @@ export const isAuthorised = async (req, res, next) => {
     next();
 };
 
-export const isAuthorisedReview = async (req, res, next) => {
+module.exports.isAuthorisedReview = async (req, res, next) => {
     try {
         const { phoneId, reviewID } = req.params;
         const review = await Review.findById(reviewID);

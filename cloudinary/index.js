@@ -1,5 +1,5 @@
-import { v2 as cloudinary} from 'cloudinary';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -7,8 +7,13 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET
 });
 
-export const storage = new CloudinaryStorage({
+const storage = new CloudinaryStorage({
     cloudinary,
     folder: 'PhoneDojo',
     allowedFormats: ['jpeg', 'png', 'jpg']
 });
+
+module.exports = {
+  cloudinary,
+  storage
+};

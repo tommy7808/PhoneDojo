@@ -1,8 +1,8 @@
-import Phone from '../models/phone.js';
-import Review from '../models/review.js';
-import AppError from '../utils/AppError.js';
+const Phone = require('../models/phone');
+const Review = require('../models/review');
+const AppError = require('../utils/AppError');
 
-export const createReview = async (req, res, next) => {
+module.exports.createReview = async (req, res, next) => {
     try {
         const { phoneId } = req.params;
         const phone = await Phone.findById(phoneId);
@@ -21,7 +21,7 @@ export const createReview = async (req, res, next) => {
     }
 }
 
-export const deleteReview = async (req, res, next) => {
+module.exports.deleteReview = async (req, res, next) => {
     try {
         const { phoneId, reviewID } = req.params;
         await Phone.findByIdAndUpdate(phoneId, { $pull: { reviews: reviewID } });

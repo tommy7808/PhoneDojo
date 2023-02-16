@@ -1,10 +1,10 @@
-import User from '../models/user.js';
+const User = require('../models/user');
 
-export const renderRegisterForm = (req, res) => {
+module.exports.renderRegisterForm = (req, res) => {
     res.render('auth/register', { title: 'Register' });
 }
 
-export const registerUser = async (req, res) => {
+module.exports.registerUser = async (req, res) => {
     try {
         const { email, username, password } = req.body;
         const user = new User({ email, username });
@@ -21,18 +21,18 @@ export const registerUser = async (req, res) => {
     }
 }
 
-export const renderLoginForm = (req, res) => {
+module.exports.renderLoginForm = (req, res) => {
     res.render('auth/login', { title: 'Login' });
 }
 
-export const loginUser = (req, res) => {
+module.exports.loginUser = (req, res) => {
     const redirectUrl = req.session.returnTo || '/phones';
     req.flash('success', 'Welcome back');
     delete req.session.returnTo;
     res.redirect(redirectUrl);
 }
 
-export const logoutUser = (req, res, next) => {
+module.exports.logoutUser = (req, res, next) => {
     req.logout(function (err) {
         if (err) { return next(err); }
         res.redirect('/');

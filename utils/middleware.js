@@ -26,7 +26,9 @@ module.exports.isLoggedIn = (req, res, next) => {
 
 module.exports.formatCheckBox = (req, res, next) => {
     // HTML checkboxes return string values so must be converted to boolean to match schema
+    console.log(req.body);
     req.body.available = req.body.available ? true : false;
+    console.log(req.body.available);
     next();
 };
 

@@ -35,14 +35,20 @@ const phoneSchema = new Schema({
         type: Number,
         min: 0
     },
-    colour: String,
-    available: Boolean,
     reviews: [
         {
             type: Schema.Types.ObjectId,
             ref: 'Review'
         }
-    ]
+    ],
+    images: [
+        {
+            url: String,
+            filename: String
+        }
+    ],
+    colour: String,
+    available: Boolean,
 });
 
 phoneSchema.post('findOneAndDelete', async phone => phone.reviews && await Review.deleteMany({ _id: { $in: phone.reviews } }));

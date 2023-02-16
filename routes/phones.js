@@ -11,11 +11,7 @@ const router = Router();
 
 router.route('/')
     .get(renderPhones)
-    // .post(isLoggedIn, formatCheckBox, createPhone);
-    .post(upload.single('image'), (req, res) => {
-        console.log(req.body, req.file);
-        res.send('Worked')
-    })
+    .post(isLoggedIn, upload.array('image'), formatCheckBox, createPhone);
 
 router.get('/new', isLoggedIn, renderNewPhoneForm);
 

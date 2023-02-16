@@ -6,8 +6,26 @@
   <div class="row">
     <div class="col-6">
       <h1 class="text-center"><%= phone.name %></h1>
-      
-      <img src="https://assets.swappie.com/cdn-cgi/image/width=600,height=600,fit=contain,format=auto/swappie-iphone-xr-red.png?v=13" alt="phone">
+
+      <div id="phoneCarousel" class="carousel carousel-dark slide">
+        <div class="carousel-inner">
+          <% phone.images.forEach((img, index) => {%>
+            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+              <img src="<%= img.url %>" class="d-block w-100" alt="">
+            </div>
+          <% }) %>
+        </div>
+        <% if (phone.images.length > 1) { %>
+          <button class="carousel-control-prev" type="button" data-bs-target="#phoneCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#phoneCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        <% } %>
+      </div>
       
       <table class="table table-hover table-bordered">
           <tbody>

@@ -12,9 +12,12 @@ module.exports.renderPhones = async (req, res, next) => {
 
 module.exports.createPhone = async (req, res, next) => {
     try {
+        console.log(req.body);
         const phone = new Phone(req.body);
         phone.user = req.user._id;
+        phone.images = req.files.map(file => ({ url: file.path, filename: file.filename }));
         await phone.save();
+        // console.log(phone);
         req.flash('success', 'Successfully added new phone!');
         res.redirect('/phones');
     } catch (err) {

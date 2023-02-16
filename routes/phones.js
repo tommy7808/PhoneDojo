@@ -1,11 +1,11 @@
 const { Router } = require('express');
-const { storage } = require('../cloudinary/index');
-// Multer is middleware for parsing request bodys with files.
 const multer = require('multer');
-// Specify where uploaded files will be stored.
-const upload = multer({ storage });
+const { storage } = require('../cloudinary');
 const { renderPhones, createPhone, renderNewPhoneForm, renderPhone, updatePhone, deletePhone, renderEditPhoneForm } = require('../controllers/phones');
 const { isLoggedIn, formatCheckBox, isAuthorised } = require('../utils/middleware');
+
+// Specify where to upload images to
+const upload = multer({ storage });
 
 const router = Router();
 

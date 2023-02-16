@@ -1,3 +1,8 @@
+if (process.env.NODE_ENV !== 'production') {
+    // Load environment variables
+    require('dotenv').config();
+}
+
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -8,7 +13,6 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
 const localStrategy = require('passport-local');
-const dotenv = require('dotenv');
 
 const AppError = require('./utils/AppError');
 const phoneRoutes = require('./routes/phones');
@@ -17,10 +21,6 @@ const authRoutes = require('./routes/auth');
 const { errorLogger, errorHandler } = require('./utils/middleware');
 const User = require('./models/user');
 
-if (process.env.NODE_ENV !== 'production') {
-    // Load environment variables
-    dotenv.config();
-}
 
 // Connect to database
 const connectToDb = async () => {

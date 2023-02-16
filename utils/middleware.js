@@ -4,7 +4,7 @@ const Review = require('../models/review');
 
 // Error handlers always have these 4 parameters
 module.exports.errorLogger = (err, req, res, next) => {
-    console.log(err.stack);
+    console.log(err.stack || err);
     if (err.name === 'ValidationError') err = new AppError(400, err.message);
     if (err.name === 'CastError') err = new AppError(400, 'Cast Error: Phone ID must be exactly 24 characters long');
     next(err);

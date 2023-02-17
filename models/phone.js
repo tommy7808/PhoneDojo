@@ -1,6 +1,15 @@
 const { Schema, model } = require('mongoose');
 const Review = require('./review');
 
+const imageSchema = new Schema({
+    url: String,
+    filename: String
+});
+
+imageSchema.virtual('thumbnail').get(function() {
+    return this.url.replace('/upload', '/upload/w_200');
+});
+
 const phoneSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
@@ -41,12 +50,7 @@ const phoneSchema = new Schema({
             ref: 'Review'
         }
     ],
-    images: [
-        {
-            url: String,
-            filename: String
-        }
-    ],
+    images: [imageSchema],
     colour: String,
     available: Boolean,
 });

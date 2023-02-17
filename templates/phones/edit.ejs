@@ -64,9 +64,9 @@
             </div>
         </div>
     </div>
-    <div class="row g-2">
+    <div>
         <% phone.images.forEach((img, index) => { %>
-        <img src="<%= img.url %>" alt="" class="img-thumbnail">
+        <img src="<%= img.thumbnail %>" alt="" class="img-thumbnail">
         <div class="form-check-inline">
             <input type="checkbox" name="deleteImages[]" id="image-<%= index %>" value="<%= img.filename %>">
             <label for="image-<%= index %>">Delete?</label>

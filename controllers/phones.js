@@ -1,4 +1,5 @@
 const Phone = require('../models/phone');
+const { cloudinary } = require('../cloudinary');
 
 module.exports.renderPhones = async (req, res, next) => {
     try {
@@ -53,8 +54,17 @@ module.exports.renderPhone = async (req, res, next) => {
 module.exports.updatePhone = async (req, res, next) => {
     try {
         const { id } = req.params;
+        const { deleteImages } = req.body;
+
+        // General update
         const phone = await Phone.findByIdAndUpdate(id, req.body, { runValidators: true });
+        // Update images
         phone.images.push(...req.files.map((file, index) => ({ url: file.path, filename: file.filename })));
+        if (deleteImages) {
+            deleteImages.forEach(async filename => await cloudinary.uploader.destroy(filename));
+            await phone.updateOne({ $pull: { images: { filename: { $in: deleteImages } } } })   
+        }
+        
         await phone.save();
         req.flash('success', 'Successfully updated phone');
         res.redirect(`/phones/${id}`);

@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const { cloudinary } = require('../cloudinary');
 const Review = require('./review');
 
 const imageSchema = new Schema({
@@ -8,6 +9,10 @@ const imageSchema = new Schema({
 
 imageSchema.virtual('thumbnail').get(function() {
     return this.url.replace('/upload', '/upload/w_200');
+});
+
+imageSchema.virtual('display').get(function() {
+    return this.url.replace('/upload',  '/upload/ar_3:4,c_crop');
 });
 
 const phoneSchema = new Schema({
@@ -55,6 +60,9 @@ const phoneSchema = new Schema({
     available: Boolean,
 });
 
-phoneSchema.post('findOneAndDelete', async phone => phone.reviews && await Review.deleteMany({ _id: { $in: phone.reviews } }));
+phoneSchema.post('findOneAndDelete', async phone => {
+    phone.reviews && await Review.deleteMany({ _id: { $in: phone.reviews } });
+    phone.images.forEach(async img => await cloudinary.uploader.destroy(img.filename));
+});
 
 module.exports = model('Phone', phoneSchema);

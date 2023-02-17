@@ -1,11 +1,15 @@
 <% layout('base') %> 
 <h1><%= phone.name %></h1>
 
-<form action="/phones/<%= phone._id %>?_method=PUT" method="post" class="row g-2 needs-validation" novalidate>
+<form action="/phones/<%= phone._id %>?_method=PUT" method="post" class="row g-2 needs-validation" novalidate enctype="multipart/form-data">
     <div class="row g-2">
         <div class="col-md-4">
             <label for="name" class="form-label" class="form-label">Name:</label>
             <input type="text" name="name" id="name" required value="<%= phone.name %>" class="form-control">
+        </div>
+        <div class="col-md-4">
+            <label for="image" class="form-label">Additional Images:</label>
+            <input type="file" name="image" id="image" class="form-control" multiple>
         </div>
     </div>
     

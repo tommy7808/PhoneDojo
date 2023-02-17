@@ -12,12 +12,10 @@ module.exports.renderPhones = async (req, res, next) => {
 
 module.exports.createPhone = async (req, res, next) => {
     try {
-        console.log(req.body);
         const phone = new Phone(req.body);
         phone.user = req.user._id;
         phone.images = req.files.map(file => ({ url: file.path, filename: file.filename }));
         await phone.save();
-        // console.log(phone);
         req.flash('success', 'Successfully added new phone!');
         res.redirect('/phones');
     } catch (err) {
@@ -55,7 +53,9 @@ module.exports.renderPhone = async (req, res, next) => {
 module.exports.updatePhone = async (req, res, next) => {
     try {
         const { id } = req.params;
-        await Phone.findByIdAndUpdate(id, req.body, { runValidators: true });
+        const phone = await Phone.findByIdAndUpdate(id, req.body, { runValidators: true });
+        phone.images.push(...req.files.map((file, index) => ({ url: file.path, filename: file.filename })));
+        await phone.save();
         req.flash('success', 'Successfully updated phone');
         res.redirect(`/phones/${id}`);
     } catch (err) {

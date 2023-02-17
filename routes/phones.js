@@ -17,7 +17,7 @@ router.get('/new', isLoggedIn, renderNewPhoneForm);
 
 router.route('/:id')
     .get(renderPhone)
-    .put(isLoggedIn, isAuthorised, formatCheckBox, updatePhone)
+    .put(isLoggedIn, isAuthorised, upload.array('image'), formatCheckBox, updatePhone)
     .delete(isLoggedIn, isAuthorised, deletePhone);
     
 router.get('/:id/edit', isLoggedIn, isAuthorised, renderEditPhoneForm);

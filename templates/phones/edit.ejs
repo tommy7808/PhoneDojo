@@ -2,7 +2,7 @@
 <h1><%= phone.name %></h1>
 
 <form action="/phones/<%= phone._id %>?_method=PUT" method="post" class="row g-2 needs-validation" novalidate enctype="multipart/form-data">
-    <div class="row g-2">
+    <div class="row g-2 justify-content-center">
         <div class="col-md-4">
             <label for="name" class="form-label" class="form-label">Name:</label>
             <input type="text" name="name" id="name" required value="<%= phone.name %>" class="form-control">
@@ -13,7 +13,7 @@
         </div>
     </div>
     
-    <div class="row g-2">
+    <div class="row g-2 justify-content-center">
         <div class="col-md-4">
             <label for="memory" class="form-label">Memory(RAM):</label>
             <select name="memory" id="memory" class="form-select" required>
@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <div class="row g-2">
+    <div class="row g-2 justify-content-center">
         <div class="col-md-4">
             <label for="processor" class="form-label">Processor:</label>
             <input type="text" name="processor" id="processor" class="form-control" required value="<%= phone.processor %>">
@@ -45,7 +45,7 @@
         </div>
     </div>
 
-    <div class="row g-2">
+    <div class="row g-2 justify-content-center">
         <div class="col-md-4">
             <label for="weight" class="form-label">Weight(grams):</label>
             <input type="number" name="weight" id="weight" class="form-control" step="any" value="<%= phone.weight %>">
@@ -56,25 +56,27 @@
             <input type="text" name="colour" id="colour" class="form-control" value="<%= phone.colour %>">
         </div>
     </div>
-    <div class="row g-2">
-        <div class="col-4">
+    <div class="row g-2 justify-content-center">
+        <div class="col-md-8">
             <div class="form-check">
                 <input type="checkbox" name="available" id="available" class="form-check-input" <%= phone.available ? 'checked' : '' %>>
                 <label for="available" class="form-check-label">Available</label>
             </div>
         </div>
     </div>
-    <div>
+    <div class="row g-2 justify-content-center mb-3 align-items-center">
         <% phone.images.forEach((img, index) => { %>
-        <img src="<%= img.thumbnail %>" alt="" class="img-thumbnail">
-        <div class="form-check-inline">
-            <input type="checkbox" name="deleteImages[]" id="image-<%= index %>" value="<%= img.filename %>">
-            <label for="image-<%= index %>">Delete?</label>
+        <div class="col-md-3">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="deleteImages[]" id="image-<%= index %>" value="<%= img.filename %>">
+                <label for="image-<%= index %>">Delete ?</label>
+            </div>
+            <img src="<%= img.thumbnail %>" alt="" class="img-thumbnail">
         </div>
         <% }) %>
     </div>
-    <div class="row g-2">
-        <div class="col-12">
+    <div class="row g-2 justify-content-center">
+        <div class="col-md-8 d-flex justify-content-center">
             <button class="btn btn-dark">Submit</button>
         </div>
     </div>

@@ -8,12 +8,16 @@ const imageSchema = new Schema({
 });
 
 imageSchema.virtual('thumbnail').get(function() {
-    return this.url.replace('/upload', '/upload/w_200');
+    return this.url.replace('/upload', '/upload/w_200,h_300');
 });
 
 imageSchema.virtual('display').get(function() {
     // return this.url.replace('/upload',  '/upload/ar_3:4,c_crop');
     return this.url.replace('/upload',  '/upload/w_300,h_450');
+});
+
+imageSchema.virtual('carousel').get(function() {
+    return this.url.replace('/upload',  '/upload/ar_3:4,c_crop');
 });
 
 const phoneSchema = new Schema({

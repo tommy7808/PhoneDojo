@@ -12,7 +12,8 @@ imageSchema.virtual('thumbnail').get(function() {
 });
 
 imageSchema.virtual('display').get(function() {
-    return this.url.replace('/upload',  '/upload/ar_3:4,c_crop');
+    // return this.url.replace('/upload',  '/upload/ar_3:4,c_crop');
+    return this.url.replace('/upload',  '/upload/w_300,h_450');
 });
 
 const phoneSchema = new Schema({

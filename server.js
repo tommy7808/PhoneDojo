@@ -24,12 +24,14 @@ const authRoutes = require('./routes/auth');
 const { errorLogger, errorHandler } = require('./utils/middleware');
 const User = require('./models/user');
 
+const dbUrl = process.env.DATABASE_URL || 'mongodb://127.0.0.1:27017/phone-store';
+const secret = process.env.SECRET || 'thisshouldbeabettersecret';
 
 // Connect to database
 const connectToDb = async () => {
     try {
         mongoose.set('strictQuery', true);
-        await mongoose.connect(process.env.DATABASE_URL);
+        await mongoose.connect(dbUrl);
         console.log('Connected to database')
     } catch (error) {
         console.log('Failed to connect to database');
@@ -49,8 +51,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize());
 
 const store = MongoDBStore.create({
-    mongoUrl: process.env.DATABASE_URL,
-    secret: 'testSecret',
+    mongoUrl: dbUrl,
+    secret,
     touchAfter: 24 * 60 * 60,
 });
 store.on('error', (e) => console.log(`Session store error:\n${e}`));
@@ -58,7 +60,7 @@ store.on('error', (e) => console.log(`Session store error:\n${e}`));
 const sessionOptions = {
     store,
     name: 's_id',
-    secret: 'testSecret',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {

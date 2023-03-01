@@ -6,12 +6,15 @@ const Review = require('../models/review');
 module.exports.errorLogger = (err, req, res, next) => {
     console.log(err.stack || err);
     if (err.name === 'ValidationError') err = new AppError(400, err.message);
-    if (err.name === 'CastError') err = new AppError(400, 'Cast Error: Phone ID must be exactly 24 characters long');
+    if (err.name === 'CastError') err = new AppError(404, 'Cannot find phone!');
     next(err);
 };
 
 module.exports.errorHandler = (err, req, res, next) => {
-    const { status = 500, message = 'Oops Something went wrong' } = err;
+    let { status = 500, message = 'Oops Something went wrong' } = err;
+    if (process.env.NODE_ENV === 'production') {
+        message = message.includes('Validation') ? message.split(':').slice(-1) : message;
+    }
     res.status(status).render('error', { status, message, title: 'Error' });
 }
 

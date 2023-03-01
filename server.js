@@ -13,6 +13,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
 const localStrategy = require('passport-local');
+const mongoSanitize = require('express-mongo-sanitize');
 
 const AppError = require('./utils/AppError');
 const phoneRoutes = require('./routes/phones');
@@ -43,7 +44,9 @@ app.engine('ejs', engine);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'templates'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(mongoSanitize());
 const sessionOptions = {
+    name: 's_id',
     secret: 'testSecret',
     resave: false,
     saveUninitialized: true,

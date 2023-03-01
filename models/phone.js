@@ -28,7 +28,7 @@ const phoneSchema = new Schema({
     name: {
         type: String,
         required: true,
-        maxLength: 30
+        maxLength: [30, 'Phone name has a maxlength of 30 characters']
     },
     memory: {
         type: Number,
@@ -43,16 +43,16 @@ const phoneSchema = new Schema({
     processor: {
         type: String,
         required: true,
-        maxLength: [20, 'Processor name is too long']
+        maxLength: [20, 'Processor has a maxlength of 20 characters']
     },
     displaySize: {
         type: Number,
         required: true,
-        min: 0
+        min: [1, 'Minimum display size is 1']
     },
     weight: {
         type: Number,
-        min: 0
+        min: [0, 'Minimum weight is 0']
     },
     reviews: [
         {

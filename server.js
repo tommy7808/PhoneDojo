@@ -14,6 +14,8 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const localStrategy = require('passport-local');
 const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
+const MongoDBStore = require('connect-mongo');
 
 const AppError = require('./utils/AppError');
 const phoneRoutes = require('./routes/phones');
@@ -27,7 +29,7 @@ const User = require('./models/user');
 const connectToDb = async () => {
     try {
         mongoose.set('strictQuery', true);
-        await mongoose.connect(`${process.env.DATABASE_URL}/phone-store`);
+        await mongoose.connect(process.env.DATABASE_URL);
         console.log('Connected to database')
     } catch (error) {
         console.log('Failed to connect to database');
@@ -45,7 +47,16 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'templates'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize());
+
+const store = MongoDBStore.create({
+    mongoUrl: process.env.DATABASE_URL,
+    secret: 'testSecret',
+    touchAfter: 24 * 60 * 60,
+});
+store.on('error', (e) => console.log(`Session store error:\n${e}`));
+
 const sessionOptions = {
+    store,
     name: 's_id',
     secret: 'testSecret',
     resave: false,
@@ -57,6 +68,36 @@ const sessionOptions = {
 };
 app.use(session(sessionOptions));
 app.use(flash());
+app.use(helmet({crossOriginEmbedderPolicy: false}));
+
+const scriptSrcUrls = [
+    'https://stackpath.bootstrapcdn.com/',
+    'https://cdn.jsdelivr.net',
+];
+const styleSrcUrls = [
+    'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css'
+];
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: [],
+            connectSrc: ["'self'"],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", "blob:"],
+            objectSrc: [],
+            imgSrc: [
+                "'self'",
+                'blob:',
+                'data:',
+                `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/`,
+                'https://store.storeimages.cdn-apple.com/',
+            ],
+            fontSrc: ["'self'",],
+        },
+    })
+);
+
 
 
 // Middleware

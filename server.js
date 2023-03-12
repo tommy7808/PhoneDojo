@@ -60,8 +60,8 @@ const sessionOptions = {
     resave: false,
     saveUninitialized: true,
     cookie: {
-        // Cookie expires after one week
-        maxAge: 1000 * 60 * 60 * 24 * 7
+        // Cookie expires after 2 hours
+        maxAge: 1000 * 60 * 60 * 2
     }
 };
 app.use(session(sessionOptions));

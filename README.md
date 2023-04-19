@@ -1,6 +1,6 @@
 # PhoneDojo
 
-This is an application that allows users to upload phones and review them. It uses **express** as a server and **mongo** as a database I made this app to showcase my node skills. You can run the app live [here](https://cryptic-depths-42340.herokuapp.com/). 
+This is an application that allows users to upload phones and review them. It uses **express** as a server and **mongo** as a database I made this app to showcase my node skills.
 
 ## Install
 ```
